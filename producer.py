@@ -2,15 +2,26 @@ import psycopg2
 from kafka import KafkaProducer
 import json
 import time
+import os
+from dotenv import load_dotenv
 
+
+# Загружаем переменные окружения
+load_dotenv()
+DB_NAME = os.getenv('POSTGRES_DB')
+DB_USER = os.getenv('POSTGRES_USER')
+DB_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+DB_HOST = os.getenv('POSTGRES_HOST')
+DB_PORT = os.getenv('POSTGRES_PORT')
+KAFKA_PORT = os.getenv('KAFKA_PORT')
 
 producer = KafkaProducer(
-    bootstrap_servers='localhost:9092',
+    bootstrap_servers=f'localhost:{KAFKA_PORT}',
     value_serializer=lambda v: json.dumps(v).encode('utf-8')
 )
 
 conn = psycopg2.connect(
-    dbname="test_db", user="admin", password="admin", host="localhost", port=5432
+    dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT
 )
 cursor = conn.cursor()
 

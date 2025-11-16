@@ -1,10 +1,21 @@
 import time
 from random import choice, randrange
 import psycopg2
+import os
+from dotenv import load_dotenv
+
+
+# Загружаем переменные окружения
+load_dotenv()
+DB_NAME = os.getenv('POSTGRES_DB')
+DB_USER = os.getenv('POSTGRES_USER')
+DB_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+DB_HOST = os.getenv('HOST')
+DB_PORT = os.getenv('POSTGRES_PORT')
 
 
 conn = psycopg2.connect(
-    dbname="test_db", user="admin", password="admin", host="localhost", port=5432
+    dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT
 )
 cursor = conn.cursor()
 

@@ -4,44 +4,44 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.3
     ports:
-      - "2181:2181"
+      - "${ZOOKEEPER_PORT}:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
 
   kafka:
     image: confluentinc/cp-kafka:7.3.3
     ports:
-      - "9092:9092"
+      - "${KAFKA_PORT}:9092"
     depends_on:
       - zookeeper
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:${KAFKA_PORT}
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   postgres:
     image: postgres:15
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: test_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
 
   clickhouse:
     image: clickhouse/clickhouse-server:latest
     container_name: clickhouse
     restart: always
     ports:
-      - "8123:8123"
-      - "9000:9000"
+      - "${CLICKHOUSE_HTTP_PORT}:8123"
+      - "${CLICKHOUSE_NATIVE_PORT}:9000"
     ulimits:
       nofile:
         soft: 262144
         hard: 262144            
     environment:
-      CLICKHOUSE_USER: user
-      CLICKHOUSE_PASSWORD: strongpassword
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD}
       CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
     volumes:
       - clickhouse_data:/var/lib/clickhouse    
